@@ -63,3 +63,18 @@ def login():
         return jsonify({'token': token})
 
     return make_response('Could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})
+
+@app.route("/customers/search", methods=["GET"])
+@token_required
+def search_customers(current_user):
+    customer_id = request.args.get('id')
+    if customer_id is None:
+        return jsonify({'message': 'Missing id parameter'}), 400
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM Customers WHERE CustomerID = %s", (customer_id,))
+    data = cur.fetchone()
+    cur.close()
+    if data:
+        return jsonify(data), 200
+    else:
+        return jsonify({'message': 'Customer not found'}), 404
