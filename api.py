@@ -152,3 +152,29 @@ def get_customer_orders(current_user, id):
     data = data_fetch(query, (id,))
     return make_response(jsonify({"CustomerID": id, "count": len(data), "orders": data}), 200)
 
+@app.route("/customers", methods=["POST"])
+@token_required
+def create_customers(current_user):
+    data = request.json
+    first_name = data.get('FirstName')
+    last_name = data.get('LastName')
+    phone_number = data.get('PhoneNumber')
+    email = data.get('Email')
+    membership_status = data.get('MembershipStatus')
+    if not all([first_name, last_name, phone_number, email, membership_status]):
+        return jsonify({'message': 'Missing required fields'}), 400
+    cur = mysql.connection.cursor()
+    cur.execute("INSERT INTO Customers (FirstName, LastName, PhoneNumber, Email, MembershipStatus) VALUES (%s, %s, %s, %s, %s)", 
+                (first_name, last_name, phone_number, email, membership_status))
+    mysql.connection.commit()
+    customer_id = cur.lastrowid
+    cur.close()
+    created_customer = {
+        "CustomerID": customer_id,
+        "FirstName": first_name,
+        "LastName": last_name,
+        "PhoneNumber": phone_number,
+        "Email": email,
+        "MembershipStatus": membership_status
+    }
+    return jsonify({'message': 'Customer added successfully', 'customer': created_customer}), 201
