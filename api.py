@@ -19,3 +19,9 @@ mysql = MySQL(app)
 app.config['SECRET_KEY'] = 'admin123'
 
 
+def data_fetch(query, params=None):
+    cur = mysql.connection.cursor()
+    cur.execute(query, params)
+    data = cur.fetchall()
+    cur.close()
+    return data
