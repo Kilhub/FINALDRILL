@@ -78,3 +78,18 @@ def search_customers(current_user):
         return jsonify(data), 200
     else:
         return jsonify({'message': 'Customer not found'}), 404
+    
+    @app.route("/orders/search", methods=["GET"])
+@token_required
+def search_orders(current_user):
+    order_id = request.args.get('id')
+    if order_id is None:
+        return jsonify({'message': 'Missing id parameter'}), 400
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM Orders WHERE OrderID = %s", (order_id,))
+    data = cur.fetchone()
+    cur.close()
+    if data:
+        return jsonify(data), 200
+    else:
+        return jsonify({'message': 'Order not found'}), 404
