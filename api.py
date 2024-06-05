@@ -196,3 +196,12 @@ def update_customer(current_user, id):
     mysql.connection.commit()
     cur.close()
     return jsonify({'message': 'Customer updated successfully'})
+
+@app.route("/employees/<int:id>", methods=["DELETE"])
+@token_required
+def delete_employee(current_user, id):
+    cur = mysql.connection.cursor()
+    cur.execute("DELETE FROM employees WHERE id = %s", (id,))
+    mysql.connection.commit()
+    cur.close()
+    return jsonify({'message': 'Employee item deleted successfully'})
