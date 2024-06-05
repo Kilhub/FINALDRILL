@@ -205,3 +205,36 @@ def delete_employee(current_user, id):
     mysql.connection.commit()
     cur.close()
     return jsonify({'message': 'Employee item deleted successfully'})
+
+@app.route("/customers", methods=["GET"])
+@token_required
+def get_customers(current_user):
+    data = data_fetch("SELECT * FROM Customers")
+    return make_response(jsonify(data), 200)
+
+@app.route("/orders", methods=["GET"])
+@token_required
+def get_orders(current_user):
+    data = data_fetch("SELECT * FROM Orders")
+    return make_response(jsonify(data), 200)
+
+@app.route("/menu", methods=["GET"])
+@token_required
+def get_menu(current_user):
+    data = data_fetch("SELECT * FROM Menu")
+    return make_response(jsonify(data), 200)
+
+@app.route("/payments", methods=["GET"])
+@token_required
+def get_payments(current_user):
+    data = data_fetch("SELECT * FROM Payments")
+    return make_response(jsonify(data), 200)
+
+@app.route("/employees", methods=["GET"])
+@token_required
+def get_employees(current_user):
+    data = data_fetch("SELECT * FROM Employees")
+    return make_response(jsonify(data), 200)
+
+if __name__ == "__main__":
+    app.run(debug=True)
