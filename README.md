@@ -1,46 +1,71 @@
-Restaurant Management System API
-This Flask application serves as a RESTful API for managing a restaurant database. It provides endpoints for various operations such as customer management, order handling, menu management, payment processing, and employee management.
+Restaurant Management API
+Introduction
+This Flask-based RESTful API is designed to manage various aspects of a restaurant, including customer information, orders, menu items, and payments. It provides functionalities such as user authentication using JSON Web Tokens (JWT) and supports CRUD (Create, Read, Update, Delete) operations for different entities within the restaurant.
 
-Requirements
+Features
+Authentication: Utilizes JWT for user authentication, ensuring secure access to API endpoints.
+CRUD Operations: Supports fundamental CRUD operations for customers, orders, menu items, and payments, enabling efficient management of restaurant data.
+Search Functionality: Provides search functionality for customers, orders, menu items, and payments based on specific criteria.
+Data Retrieval: Retrieves data for customers, orders, menu items, and payments, facilitating easy access to relevant information.
+MySQL Integration: Integrates with MySQL database for storing and managing restaurant data efficiently.
+Prerequisites
+To set up and run the API, ensure the following prerequisites are met:
+
 Python 3.x
 Flask
-Flask-MySQLdb
+Flask-MySQLDB
 PyJWT
+
 Installation
-1. Clone this repository:
-git clone https://github.com/your/repo.git
-cd repo
+1. Clone the repository:
+   git clone <repository_url>
 
-3. Install the required dependencies:
-pip install Flask Flask-MySQLdb PyJWT
+2. Install the required dependencies:
+   pip install Flask Flask-MySQLDB PyJWT
 
-Configuration
-MySQL database configuration:
-Ensure you have a MySQL server installed and running.
-Modify the config section in app.py to match your MySQL server settings.
-Usage
-Run the Flask application:
-python app.py
+3. Set up MySQL database:
+   Create a database named RestaurantDB.
+  Set your MySQL username and password in api.py
 
-Endpoints
-/login (POST): Endpoint for user authentication. Returns a JWT token upon successful authentication.
-/customers/search (GET): Search for a customer by ID.
-/orders/search (GET): Search for an order by ID.
-/menu/search (GET): Search for a menu item by ID.
-/payments/search (GET): Search for a payment by ID.
-/employees/search (GET): Search for an employee by ID.
-/customers/<id>/orders (GET): Retrieve orders associated with a specific customer.
-/customers (GET, POST): Get all customers or create a new customer.
-/customers/<id> (PUT): Update a customer's information.
-/employees/<id> (DELETE): Delete an employee by ID.
-/orders, /menu, /payments, /employees (GET): Get all orders, menu items, payments, and employees respectively.
-Note: All endpoints except /login require a valid JWT token in the x-access-token header for authentication.
+  app.config["MYSQL_USER"] = "root"
+  app.config["MYSQL_PASSWORD"] = "your_password_here"
 
+4. Run the Flask application:
+python api.py
+
+API Endpoints
 Authentication
-JWT (JSON Web Tokens) are used for authentication.
-Include the JWT token received from /login in the x-access-token header of subsequent requests for authentication.
-Error Handling
-The API returns appropriate HTTP status codes and error messages for different scenarios.
-Deployment
-Ensure proper security measures are implemented before deploying this application to a production environment.
-Consider using HTTPS for secure communication between clients and the server.
+POST /login: Authenticates users and generates JWT token.
+Customers
+GET /customers: Retrieves all customers.
+GET /customers/<int:id>: Retrieves a customer by ID.
+POST /customers: Adds a new customer.
+PUT /customers/<int:id>: Updates an existing customer.
+Orders
+GET /orders: Retrieves all orders.
+GET /orders/<int:id>: Retrieves an order by ID.
+Menu
+GET /menu: Retrieves all menu items.
+GET /menu/<int:id>: Retrieves a menu item by ID.
+Payments
+GET /payments: Retrieves all payments.
+GET /payments/<int:id>: Retrieves a payment by ID.
+Search
+GET /customers/search: Searches for customers based on provided criteria.
+GET /orders/search: Searches for orders based on provided criteria.
+GET /menu/search: Searches for menu items based on provided criteria.
+GET /payments/search: Searches for payments based on provided criteria.
+GET /employees/search: Searches for employees based on provided criteria.
+Additional Operations
+GET /customers/<int:id>/orders: Retrieves orders associated with a specific customer.
+DELETE /employees/<int:id>: Deletes an employee by ID.
+
+Testing
+Before running unit tests, ensure dependencies are installed and the API is running. Execute the tests:
+python test.py
+
+Additional Notes
+Properly configure MySQL settings and implement security measures before deploying the API in production environments.
+Ensure to provide adequate error handling and input validation mechanisms to enhance the robustness and reliability of the API.
+
+
