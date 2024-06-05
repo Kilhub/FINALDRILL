@@ -108,3 +108,18 @@ def search_menu(current_user):
         return jsonify(data), 200
     else:
         return jsonify({'message': 'Menu item not found'}), 404
+    
+    @app.route("/payments/search", methods=["GET"])
+@token_required
+def search_payments(current_user):
+    payment_id = request.args.get('id')
+    if payment_id is None:
+        return jsonify({'message': 'Missing id parameter'}), 400
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM Payments WHERE PaymentID = %s", (payment_id,))
+    data = cur.fetchone()
+    cur.close()
+    if data:
+        return jsonify(data), 200
+    else:
+        return jsonify({'message': 'Payment not found'}), 404
