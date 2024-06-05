@@ -93,3 +93,18 @@ def search_orders(current_user):
         return jsonify(data), 200
     else:
         return jsonify({'message': 'Order not found'}), 404
+    
+    @app.route("/menu/search", methods=["GET"])
+@token_required
+def search_menu(current_user):
+    menu_item_id = request.args.get('id')
+    if menu_item_id is None:
+        return jsonify({'message': 'Missing id parameter'}), 400
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM Menu WHERE MenuItemID = %s", (menu_item_id,))
+    data = cur.fetchone()
+    cur.close()
+    if data:
+        return jsonify(data), 200
+    else:
+        return jsonify({'message': 'Menu item not found'}), 404
