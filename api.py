@@ -178,3 +178,21 @@ def create_customers(current_user):
         "MembershipStatus": membership_status
     }
     return jsonify({'message': 'Customer added successfully', 'customer': created_customer}), 201
+
+@app.route("/customers/<int:id>", methods=["PUT"])
+@token_required
+def update_customer(current_user, id):
+    data = request.json
+    first_name = data.get('FirstName')
+    last_name = data.get('LastName')
+    phone_number = data.get('PhoneNumber')
+    email = data.get('Email')
+    membership_status = data.get('MembershipStatus')
+    if not all([first_name, last_name, phone_number, email, membership_status]):
+        return jsonify({'message': 'Missing required fields'}), 400
+    cur = mysql.connection.cursor()
+    cur.execute("UPDATE Customers SET FirstName = %s, LastName = %s, PhoneNumber = %s, Email = %s, MembershipStatus = %s WHERE CustomerID = %s", 
+                (first_name, last_name, phone_number, email, membership_status, id))
+    mysql.connection.commit()
+    cur.close()
+    return jsonify({'message': 'Customer updated successfully'})
