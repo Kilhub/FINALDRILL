@@ -79,7 +79,7 @@ def search_customers(current_user):
     else:
         return jsonify({'message': 'Customer not found'}), 404
     
-    @app.route("/orders/search", methods=["GET"])
+@app.route("/orders/search", methods=["GET"])
 @token_required
 def search_orders(current_user):
     order_id = request.args.get('id')
@@ -94,7 +94,7 @@ def search_orders(current_user):
     else:
         return jsonify({'message': 'Order not found'}), 404
     
-    @app.route("/menu/search", methods=["GET"])
+@app.route("/menu/search", methods=["GET"])
 @token_required
 def search_menu(current_user):
     menu_item_id = request.args.get('id')
@@ -109,7 +109,7 @@ def search_menu(current_user):
     else:
         return jsonify({'message': 'Menu item not found'}), 404
     
-    @app.route("/payments/search", methods=["GET"])
+@app.route("/payments/search", methods=["GET"])
 @token_required
 def search_payments(current_user):
     payment_id = request.args.get('id')
@@ -124,7 +124,7 @@ def search_payments(current_user):
     else:
         return jsonify({'message': 'Payment not found'}), 404
     
-    @app.route("/employees/search", methods=["GET"])
+@app.route("/employees/search", methods=["GET"])
 @token_required
 def search_employees(current_user):
     id = request.args.get('id')
@@ -138,3 +138,17 @@ def search_employees(current_user):
         return jsonify(data), 200
     else:
         return jsonify({'message': 'Employee not found'}), 404
+        
+@app.route('/customers/<int:id>/orders', methods=['GET'])
+@token_required
+def get_customer_orders(current_user, id):
+    query = """
+    
+    SELECT Customers.FirstName, Customers.LastName, Orders.OrderDate, Orders.TotalAmount
+    FROM Customers
+    INNER JOIN Orders ON Customers.CustomerID = Orders.CustomerID
+    WHERE Customers.CustomerID = %s
+    """
+    data = data_fetch(query, (id,))
+    return make_response(jsonify({"CustomerID": id, "count": len(data), "orders": data}), 200)
+
