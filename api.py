@@ -123,3 +123,18 @@ def search_payments(current_user):
         return jsonify(data), 200
     else:
         return jsonify({'message': 'Payment not found'}), 404
+    
+    @app.route("/employees/search", methods=["GET"])
+@token_required
+def search_employees(current_user):
+    id = request.args.get('id')
+    if id is None:
+        return jsonify({'message': 'Missing id parameter'}), 400
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM Employees WHERE id = %s", (id,))
+    data = cur.fetchone()
+    cur.close()
+    if data:
+        return jsonify(data), 200
+    else:
+        return jsonify({'message': 'Employee not found'}), 404
